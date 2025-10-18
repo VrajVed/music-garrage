@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-// Check for the API key *before* attempting to instantiate the client
 if (!process.env.NEBIUS_API_KEY) {
   console.error("CRITICAL: NEBIUS_API_KEY environment variable is not set!");
-  // You might want to throw an error here during server startup in a real app,
-  // but for now, we'll let requests fail with a clear message.
 }
 
 const openai = new OpenAI({
@@ -29,7 +26,6 @@ export async function POST(req) {
     return NextResponse.json({ error: 'No message provided' }, { status: 400 });
   }
 
-  // Re-check here just in case, before making the actual call
   if (!process.env.NEBIUS_API_KEY) {
      console.error("NEBIUS_API_KEY environment variable is not set at time of request!");
      return NextResponse.json({ error: 'Server configuration error: API key missing' }, { status: 500 });
@@ -39,7 +35,7 @@ export async function POST(req) {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
+      model: 'openai/gpt-oss-20b',
       temperature: 0.6,
       messages: [
         {
